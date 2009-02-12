@@ -12,13 +12,13 @@
 //----- $Id$
 //-----------------------------------------------------------------------------
 
-#include "XGetopt.h"	// for getopt
+#include "XGetopt.h"			// for getopt
 
-#define _WIN32_WINNT 0x0500
-#include <Winsock2.h>	// for Winsock2
-#include <Winbase.h>	// for BindIoCompletionCallback
-#include <stdio.h>		// for printf
-#include <conio.h>
+#define _WIN32_WINNT 0x0500		// Minimum system required Windows 2000
+#include <Winsock2.h>			// for Winsock2
+#include <Winbase.h>			// for BindIoCompletionCallback
+#include <stdio.h>				// for printf
+#include <conio.h>				// for _kbhit
 
 //-----------------------------------------------------------------------------
 //----- Constant
