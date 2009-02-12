@@ -25,7 +25,7 @@ namespace CCTEC
 		Mutex();
 		~Mutex();
 		void Lock();
-		void UnLock();
+		void Unlock();
 
 	private:
 		CRITICAL_SECTION m_Cs;	// Critical-section object

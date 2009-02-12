@@ -18,19 +18,15 @@
 #include <windows.h>
 #include <stdio.h>
 
-typedef struct sirtoozee_s 
-{
-	int age;
-	bool gender;
-} sirtoozee_t;
-
 int main() 
 {
 	CCTEC::Mutex MyMutex;
-	CCTEC::QueuedBlocks<sirtoozee_t> MyQueuedBlocks;
+	CCTEC::QueuedBlocks<int> MyQueuedBlocks;
 
 	MyMutex.Lock();
-	MyMutex.UnLock();
+	MyMutex.Unlock();
+
+	MyQueuedBlocks.GetFromQueue();
 
 	return 0;
 }
