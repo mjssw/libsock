@@ -12,25 +12,42 @@
 //----- $Id$
 //-----------------------------------------------------------------------------
 
+#ifndef __MEMM_H__
+#define __MEMM_H__
+
 #include "Mutex.h"
-#include "MemM.h"
 
-#include <windows.h>
-#include <stdio.h>
-
-typedef struct sirtoozee_s 
+namespace CCTEC 
 {
-	int age;
-	bool gender;
-} sirtoozee_t;
+	template<class T> 
+		class QueuedBlocks 
+	{
+	public:
+		QueuedBlocks(int nInitSize = 1) 
+		{
+			int i;
+			int nSize = (nInitSize <= 0) ? 1 : nInitSize;
 
-int main() 
-{
-	CCTEC::Mutex MyMutex;
-	CCTEC::QueuedBlocks<sirtoozee_t> MyQueuedBlocks;
+			for (i = 0; i < nSize; i++) 
+			{
+				T *t = new T();
+				if (t) 
+				{
+					
+				}
+			}
+		}
+		~QueuedBlocks() 
+		{
+			// TODO: To lock the critical section, but are there multi-threads 
+			// to cleanup the object?
+			m_Mutex.Lock();
+			m_Mutex.UnLock();
+		}
 
-	MyMutex.Lock();
-	MyMutex.UnLock();
+	private:
+		Mutex m_Mutex;
+	};
+};
 
-	return 0;
-}
+#endif // __MEMM_H__
