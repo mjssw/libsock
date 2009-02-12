@@ -32,7 +32,7 @@ namespace CCTEC
 		EnterCriticalSection(&m_Cs);
 	}
 
-	void Mutex::UnLock() 
+	void Mutex::Unlock() 
 	{
 		// TODO: To releases ownership of the specified critical section object.
 		LeaveCriticalSection(&m_Cs);
