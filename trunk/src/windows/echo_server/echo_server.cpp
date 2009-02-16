@@ -13,18 +13,19 @@
 //-----------------------------------------------------------------------------
 
 #include "stdafx.h"
-#define _WIN32_WINNT 0x0400 
+#define _WIN32_WINNT 0x0400             // for Windows NT 4.0 
 
 #include <stdio.h>
 #include <conio.h>
 #include <time.h>
-#include "INCLUDE/server_service.h"
+#include "INCLUDE/server_service.h"     // for server_service template
+#include "XGetopt.h"                    // for getopt
 
 #define BUFF_SIZE 512
-#define MAX_CONNECTIONS 10
-#define NO_THREADS 4
-#define TIME_OUT 10
-#define PORT 8080
+#define MAX_CONNECTIONS 1000            // for concurrent connection number
+#define NO_THREADS 4                    // for working threads number in the pool
+#define TIME_OUT 10                     // for the timeout routine
+#define PORT 8080                       // for the default port
 
 //---------------------------------------------------------------------------------
 struct Attachment {
@@ -163,6 +164,7 @@ int main(int argc, char* argv[])
 	MyServerService *sService;
 	MyISockEventHandler *mSockHndl;
 	WSAData	wsData;
+    int c, max_conn = MAX_CONNECTIONS, timeout = TIME_OUT, port = PORT;
 
 	nRet = WSAStartup(MAKEWORD(2,2),&wsData);
 	if ( nRet < 0 ) {
@@ -170,12 +172,29 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 
+	// TODO: To parse the argv
+    while ((c = getopt(argc, argv, "tcp:")) != -1) 
+    {
+        switch (c) 
+        {
+		case 't':
+			timeout = atoi(optarg);
+			break;
+		case 'c':
+			max_conn = atoi(optarg);
+			break;
+        case 'p':
+			port = atoi(optarg);
+			break;
+        }    
+    }
+
 	try {
 		Overlapped::Init( MAX_CONNECTIONS );
 		mSockHndl = new MyISockEventHandler();
 
-		sService = new MyServerService((MyISockEvent *) mSockHndl, PORT, 
-			MAX_CONNECTIONS, NO_THREADS, TIME_OUT, false);
+		sService = new MyServerService((MyISockEvent *) mSockHndl, port, 
+			max_conn, NO_THREADS, timeout, false);
 		sService->start();
 
 		printf("hit <ENTER> to stop ...\n");
