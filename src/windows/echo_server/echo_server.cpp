@@ -173,6 +173,7 @@ int main(int argc, char* argv[])
 	}
 
 	// TODO: To parse the argv
+    printf("Usage: -t TIME_OUT -c MAX_CONNECTION -p PORT\n");
     while ((c = getopt(argc, argv, "tcp:")) != -1) 
     {
         switch (c) 
