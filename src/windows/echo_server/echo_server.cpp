@@ -191,7 +191,7 @@ int main(int argc, char* argv[])
     }
 
 	try {
-		Overlapped::Init( MAX_CONNECTIONS );
+		Overlapped::Init( max_conn );
 		mSockHndl = new MyISockEventHandler();
 
 		sService = new MyServerService((MyISockEvent *) mSockHndl, port, 
