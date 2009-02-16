@@ -1,3 +1,0 @@
-1. Mutex;
-2. Memory management;
-3. Thread pool;
