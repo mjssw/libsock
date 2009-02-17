@@ -201,6 +201,7 @@ int main(int argc, char* argv[])
     }
 
 	try {
+        // TODO: To initial a pool of the MYOVERLAPPED structures, see the socket_client.h
 		Overlapped::Init( max_conn );
 		mSockHndl = new MyISockEventHandler();
 

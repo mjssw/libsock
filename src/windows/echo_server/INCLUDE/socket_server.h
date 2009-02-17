@@ -1,3 +1,17 @@
+// (C) Copyright 2008 - 2009 by CCTEC ENGINEERING CO., LTD
+//
+// Permission to use, copy, modify, and distribute this software in
+// object code form for any purpose and without fee is hereby granted, 
+// provided that the above copyright notice appears in all copies and 
+// that both that copyright notice and the limited warranty and
+// restricted rights notice below appear in all supporting 
+// documentation.
+//
+
+//-----------------------------------------------------------------------------
+//----- $Id$
+//-----------------------------------------------------------------------------
+
 #ifndef ___SOCKET_SERVER_H_INCLUDED___
 #define ___SOCKET_SERVER_H_INCLUDED___
 
@@ -19,7 +33,7 @@ private:
 
 protected:
 public:
-	// Set the size of the socket pool to the maximum number of accepted
+	// Set the size (nMaxClients) of the socket pool to the maximum number of accepted
 	// client connections.
 	ServerSocket(unsigned int nPort, unsigned int nMaxClients, 
 		bool blnCreateAsync = false, bool blnBindLocal = true, 
@@ -52,7 +66,7 @@ public:
 
 		// Bind to the localhost ("127.0.0.1") to accept connections only from
 		// localhost or 
-		// "0.0.0.0" (INADDR_ANY) to accept connections from any IP address.
+		// user provided some IP address such as "192.168.3.83".
 		if (blnBindLocal) sAddrIn.sin_addr.s_addr = inet_addr("127.0.0.1");
 		else 
         {
