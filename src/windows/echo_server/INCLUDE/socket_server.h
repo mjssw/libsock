@@ -71,7 +71,7 @@ public:
 		else 
         {
             sAddrIn.sin_addr.s_addr = inet_addr(hostAddress);
-            printf("Server with %s\n", hostAddress);
+            printf("Server with %s IP address.\n", hostAddress);
         }
 
 		// Bind the structure to the created server socket.
