@@ -432,7 +432,8 @@ public:
 	//                If "true" then server socket is bind 
 	//                to localhost ("127.0.0.1"). 
 	//                If "false" then server socket is bind 
-	//                to INADDR_ANY ("0.0.0.0").
+	//                to hostAddress described as below.
+    // hostAddress  - see ServerSocket<T> for more details too.
 	ServerService( ISockEvent<T> *pSEvent, unsigned int nPort, unsigned int nMaxClients, 
 		unsigned int nNoThreads, unsigned int timeout, 
 		bool blnBindLocal = true, const char *hostAddress = NULL): 
