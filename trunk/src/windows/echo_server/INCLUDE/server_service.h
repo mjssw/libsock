@@ -1,3 +1,17 @@
+// (C) Copyright 2008 - 2009 by CCTEC ENGINEERING CO., LTD
+//
+// Permission to use, copy, modify, and distribute this software in
+// object code form for any purpose and without fee is hereby granted, 
+// provided that the above copyright notice appears in all copies and 
+// that both that copyright notice and the limited warranty and
+// restricted rights notice below appear in all supporting 
+// documentation.
+//
+
+//-----------------------------------------------------------------------------
+//----- $Id$
+//-----------------------------------------------------------------------------
+
 #ifndef ___SERVER_SERVICE_H_INCLUDED___
 #define ___SERVER_SERVICE_H_INCLUDED___
 
@@ -318,7 +332,7 @@ protected:
 			if ( pSocket != NULL ) {
 				Log::LogMessage( L"Socket created at %d.\n", pSocket->GetSocket() );
 
-				// associate socket with IOCP
+				// associate socket from client connection with IOCP
 				m_hIocp.AssociateSocket( pSocket );
 				pSocket->GetAttachment()->ResetTime( false );
 				// push the socket to the IOCP queue with
@@ -353,7 +367,8 @@ protected:
 				continue;
 			}
 
-			// not good if zero bytes were transferred
+			// TODO: To handle the socket send and read BUT 
+            // not good if zero bytes were transferred
 			if ( dwBytesTransferred == 0 ) {
 				// clear the time and push the socket to 
 				// the IOCP with status _CLOSE. Socket 
