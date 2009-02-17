@@ -22,7 +22,8 @@ public:
 	// Set the size of the socket pool to the maximum number of accepted
 	// client connections.
 	ServerSocket(unsigned int nPort, unsigned int nMaxClients, 
-		bool blnCreateAsync = false, bool blnBindLocal = true): m_SockPool(nMaxClients) {
+		bool blnCreateAsync = false, bool blnBindLocal = true, 
+        const char *hostAddress = NULL): m_SockPool(nMaxClients) {
 
 		int nRet;
 		unsigned long lngMode = 1;
@@ -53,7 +54,11 @@ public:
 		// localhost or 
 		// "0.0.0.0" (INADDR_ANY) to accept connections from any IP address.
 		if (blnBindLocal) sAddrIn.sin_addr.s_addr = inet_addr("127.0.0.1");
-		else sAddrIn.sin_addr.s_addr = htonl(INADDR_ANY);
+		else 
+        {
+            sAddrIn.sin_addr.s_addr = inet_addr(hostAddress);
+            printf("Server with %s\n", hostAddress);
+        }
 
 		// Bind the structure to the created server socket.
 		nRet = bind(this->m_ServSock, (struct sockaddr *) &sAddrIn, sizeof(sAddrIn));

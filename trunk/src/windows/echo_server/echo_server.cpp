@@ -165,6 +165,8 @@ int main(int argc, char* argv[])
 	MyISockEventHandler *mSockHndl;
 	WSAData	wsData;
     int c, max_conn = MAX_CONNECTIONS, timeout = TIME_OUT, port = PORT;
+    bool blnBindLocal = false;
+    const char *host = NULL;
 
 	nRet = WSAStartup(MAKEWORD(2,2),&wsData);
 	if ( nRet < 0 ) {
@@ -172,12 +174,15 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 
-	// TODO: To parse the argv
-    printf("Usage: -t TIME_OUT -c MAX_CONNECTION -p PORT\n");
-    while ((c = getopt(argc, argv, "tcp:")) != -1) 
+	// TODO: To process the command line
+    printf("Usage: -h HOST_ADDRESS -t TIME_OUT -c MAX_CONNECTION -p PORT\n");
+    while ((c = getopt(argc, argv, "h:t:c:p:")) != EOF) 
     {
         switch (c) 
         {
+        case 'h':
+            host = optarg;
+            break;    
 		case 't':
 			timeout = atoi(optarg);
 			break;
@@ -189,13 +194,18 @@ int main(int argc, char* argv[])
 			break;
         }    
     }
+    if (!blnBindLocal && host == NULL) 
+    {
+        printf("ERROR! Provide host address please if without choosing bind with local!\n");
+        return -1;
+    }
 
 	try {
 		Overlapped::Init( max_conn );
 		mSockHndl = new MyISockEventHandler();
 
 		sService = new MyServerService((MyISockEvent *) mSockHndl, port, 
-			max_conn, NO_THREADS, timeout, false);
+			max_conn, NO_THREADS, timeout, blnBindLocal, host);
 		sService->start();
 
 		printf("hit <ENTER> to stop ...\n");

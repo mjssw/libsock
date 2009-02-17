@@ -420,8 +420,8 @@ public:
 	//                to INADDR_ANY ("0.0.0.0").
 	ServerService( ISockEvent<T> *pSEvent, unsigned int nPort, unsigned int nMaxClients, 
 		unsigned int nNoThreads, unsigned int timeout, 
-		bool blnBindLocal = true ): 
-				m_ServerSocket( nPort, nMaxClients, true, blnBindLocal ), 
+		bool blnBindLocal = true, const char *hostAddress = NULL): 
+				m_ServerSocket( nPort, nMaxClients, true, blnBindLocal, hostAddress ), 
 				m_hIocp( 200 ), m_SockEventTaskPool( nMaxClients ) {
 
 		unsigned int i = 0;
