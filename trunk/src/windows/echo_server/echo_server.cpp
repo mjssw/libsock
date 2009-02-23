@@ -22,7 +22,8 @@
 #include "XGetopt.h"                    // for getopt
 
 #define BUFF_SIZE 512
-#define MAX_CONNECTIONS 1000            // for concurrent connection number
+#define MAX_CONNECTIONS 10              // for concurrent connection number, 
+                                        // set very small for test purpose only 
 #define NO_THREADS 4                    // for working threads number in the pool
 #define TIME_OUT 10                     // for the timeout routine
 #define PORT 8080                       // for the default port
