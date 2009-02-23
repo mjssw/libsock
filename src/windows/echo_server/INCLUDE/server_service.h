@@ -330,7 +330,8 @@ protected:
 			// check for an incoming connection
 			pSocket = m_ServerSocket.Accept();
 			if ( pSocket != NULL ) {
-				Log::LogMessage( L"Socket created at %d.\n", pSocket->GetSocket() );
+				Log::LogMessage( L"Socket created at %d", pSocket->GetSocket() );
+                printf(" via %s\n", pSocket->GetClientAddr());
 
 				// associate socket from client connection with IOCP
 				m_hIocp.AssociateSocket( pSocket );
