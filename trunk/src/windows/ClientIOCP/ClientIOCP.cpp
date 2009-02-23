@@ -43,6 +43,9 @@ Updates:
 
 #include "ClientIOCP.h"
 
+static char *m_Host = NULL;
+static int m_Port = 8080;
+
 int main(int argc, char* argv[])
 {
 	//Validate the input
@@ -94,6 +97,8 @@ int main(int argc, char* argv[])
 
 	DWORD nThreadID;
 
+    m_Host = argv[1];
+    m_Port = nPortNo;
 	for (int ii = 0; ii < nNoOfThreads; ii++)
 	{
 		bConnectedSocketCreated = CreateConnectedSocket(&(pThreadInfo[ii].m_Socket), argv[1], nPortNo);
@@ -213,14 +218,19 @@ DWORD WINAPI WorkerThread(LPVOID lpParam)
 	for (int ii = 0; ii < pThreadInfo->m_nNoOfSends; ii++)
 	{
 		sprintf(szTemp, "%d. %s", ii+1, pThreadInfo->m_szBuffer);
-
+RE_SEND:
 		//Send the message to the server, include the NULL as well
 		nBytesSent = send(pThreadInfo->m_Socket, szTemp, strlen(szTemp), 0);
 
 		if (SOCKET_ERROR == nBytesSent) 
 		{
 			WriteToConsole("\nError occurred while writing to socket %ld.", WSAGetLastError());
-			return 1; //error
+			//return 1; //error
+            Sleep(3000);
+            CreateConnectedSocket(&(pThreadInfo->m_Socket), m_Host, m_Port);
+            memset(szTemp, 0, MAX_BUFFER_LEN);
+            sprintf(szTemp, "DEBUG at %d: Re-sending ...", __LINE__);
+            goto RE_SEND;
 		}
 
 		//Get the message from the server
@@ -229,7 +239,12 @@ DWORD WINAPI WorkerThread(LPVOID lpParam)
 		if (SOCKET_ERROR == nBytesRecv) 
 		{
 			WriteToConsole("\nError occurred while reading from socket %ld.", WSAGetLastError());
-			return 1; //error
+			//return 1; //error
+            Sleep(3000);
+            CreateConnectedSocket(&(pThreadInfo->m_Socket), m_Host, m_Port);
+            memset(szTemp, 0, MAX_BUFFER_LEN);
+            sprintf(szTemp, "DEBUG at %d: Re-recving ...", __LINE__);
+            goto RE_SEND;
 		}
 
 		//Display the server message
