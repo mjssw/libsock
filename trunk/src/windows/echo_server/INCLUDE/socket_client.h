@@ -1,3 +1,17 @@
+// (C) Copyright 2008 - 2009 by CCTEC ENGINEERING CO., LTD
+//
+// Permission to use, copy, modify, and distribute this software in
+// object code form for any purpose and without fee is hereby granted, 
+// provided that the above copyright notice appears in all copies and 
+// that both that copyright notice and the limited warranty and
+// restricted rights notice below appear in all supporting 
+// documentation.
+//
+
+//-----------------------------------------------------------------------------
+//----- $Id$
+//-----------------------------------------------------------------------------
+
 #ifndef ___SOCKET_CLIENT_H_INCLUDED___
 #define ___SOCKET_CLIENT_H_INCLUDED___
 
@@ -80,6 +94,9 @@ public:
 	
 	// Returns the socket associated with the object.
 	SOCKET GetSocket() { return this->m_ClientSock; };
+    
+    // TODO: To get client IP address.
+    char *GetClientAddr() { return inet_ntoa(m_psForeignAddIn.sin_addr); };
 
 	// Returns the session of the current client socket.
 	// Technically, this is the counter of how may times
