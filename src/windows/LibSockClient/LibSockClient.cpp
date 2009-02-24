@@ -13,6 +13,7 @@
 //-----------------------------------------------------------------------------
 
 #include "stdafx.h"
+#include "LibSockClient.h"
 
 #include <winsock2.h>
 
@@ -22,8 +23,6 @@ static SOCKET m_SocketHandler;
 static char *m_Host = NULL;
 static int m_Port = 0;
 static int m_ErrorCode = 0;
-
-void libsockclient_cleanup();
 
 // TODO: To act as construct.
 bool 
@@ -97,7 +96,7 @@ libsockclient_cleanup()
 
 // TODO: To send buffer to the server if failed re-send as default.
 void 
-libsockclient_send(char *Buffer, bool resend = true) 
+libsockclient_send(char *Buffer, bool resend) 
 {
 	WSABUF DataBuf;
 	DWORD dwSendBytes = 0;
@@ -112,13 +111,13 @@ libsockclient_send(char *Buffer, bool resend = true)
 		m_ErrorCode = WSAGetLastError();
 		Sleep(REDO_INTERVAL);
 		libsockclient_init(m_Host, m_Port);
-		libsockclient_send(Buffer);
+		libsockclient_send(Buffer, true);
 	}
 }
 
 // TODO: To recive buffer from the server if failed re-recive as default.
 void 
-libsockclient_recv(char *Buffer, bool rerecv = true) 
+libsockclient_recv(char *Buffer, bool rerecv) 
 {
 	WSABUF DataBuf;
 	DWORD dwRecvBytes;
@@ -133,7 +132,7 @@ libsockclient_recv(char *Buffer, bool rerecv = true)
 		m_ErrorCode = WSAGetLastError();
 		Sleep(REDO_INTERVAL);
 		libsockclient_init(m_Host, m_Port);
-		libsockclient_recv(Buffer);
+		libsockclient_recv(Buffer, true);
 	}
 }
 
