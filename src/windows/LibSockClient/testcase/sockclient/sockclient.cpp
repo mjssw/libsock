@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
 
 	printf("sending ...\n");
 	libsockclient_send("sirtoozee", true);
-	printf("reciving ...\n");
+	printf("receiving ...\n");
 	memset(pBuffer, 0, BUFF_SIZE);
 	libsockclient_recv(pBuffer, BUFF_SIZE, true);
 	printf("%s\n", pBuffer);
