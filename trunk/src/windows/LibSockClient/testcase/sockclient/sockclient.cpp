@@ -1,5 +1,16 @@
-// sockclient.cpp : Defines the entry point for the console application.
+// (C) Copyright 2008 - 2009 by CCTEC ENGINEERING CO., LTD
 //
+// Permission to use, copy, modify, and distribute this software in
+// object code form for any purpose and without fee is hereby granted, 
+// provided that the above copyright notice appears in all copies and 
+// that both that copyright notice and the limited warranty and
+// restricted rights notice below appear in all supporting 
+// documentation.
+//
+
+//-----------------------------------------------------------------------------
+//----- $Id$
+//-----------------------------------------------------------------------------
 
 #include "stdafx.h"
 #include "LibSockClient.h"
@@ -27,10 +38,10 @@ int main(int argc, char* argv[])
 	}
 
 	printf("sending ...\n");
-	libsockclient_send("test", true);
+	libsockclient_send("sirtoozee", true);
 	printf("reciving ...\n");
 	memset(pBuffer, 0, BUFF_SIZE);
-	libsockclient_recv(pBuffer, true);
+	libsockclient_recv(pBuffer, BUFF_SIZE, true);
 	printf("%s\n", pBuffer);
 
 	libsockclient_cleanup();
