@@ -124,8 +124,9 @@ public:
 		dwPos = pSocket->GetAttachment()->dwStringSize;
 		temp = pSocket->GetAttachment()->sString;
 
-		nRet = pSocket->ReadFromSocket(	temp + dwPos, dwSize - dwPos );
-		// TODO: To emulate for reading command(s) from the client(s)
+		//nRet = pSocket->ReadFromSocket(	temp + dwPos, dwSize - dwPos );
+		nRet = pSocket->ReadFromSocket(	temp, dwSize );
+        // TODO: To emulate for reading command(s) from the client(s)
         printf("DEBUG at %d: read %s\n", __LINE__, temp);
         // TODO: To handle the command(s)
         // m_HandleCmd(...);
@@ -150,12 +151,11 @@ public:
 	virtual void OnWriteFinalized( MyCSocket *pSocket, MYOVERLAPPED *pOverlap,
 		DWORD dwBytesTransferred, MySSocket *pServerSocket, MyIOCPSimple *pHIocp ) {
 		char *temp = pSocket->GetAttachment()->sString;
-        // FIXME: Multi-send issue.
-		// clean the attachment
-		pSocket->GetAttachment()->Clear();
+        // clean the attachment
+		//pSocket->GetAttachment()->Clear();
 
 		// and once again
-		OnAccept(pSocket, NULL, pServerSocket, NULL);
+		//OnAccept(pSocket, NULL, pServerSocket, NULL);
 	};
 };
 
