@@ -24,8 +24,9 @@ int main(int argc, char* argv[])
 {
 	bool err;
 	char pBuffer[BUFF_SIZE];
+	int i;
 
-	err = libsockclient_init("192.168.3.83", 8080);
+	err = libsockclient_init("202.111.5.2", 8080);
 	if (err) 
 	{
 		printf("Initial libsockclient success.\n");
@@ -37,12 +38,15 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 
-	printf("sending ...\n");
-	libsockclient_send("sirtoozee", true);
-	printf("receiving ...\n");
-	memset(pBuffer, 0, BUFF_SIZE);
-	libsockclient_recv(pBuffer, BUFF_SIZE, true);
-	printf("%s\n", pBuffer);
+	for (i = 0; i < 10; i++) 
+	{
+		printf("sending ...\n");
+		libsockclient_send("sirtoozee", true);
+		printf("receiving ...\n");
+		memset(pBuffer, 0, BUFF_SIZE);
+		libsockclient_recv(pBuffer, BUFF_SIZE, true);
+		printf("%s\n", pBuffer);
+	}
 
 	libsockclient_cleanup();
 	return 0;
