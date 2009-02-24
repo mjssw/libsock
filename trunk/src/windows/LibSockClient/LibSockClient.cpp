@@ -17,8 +17,8 @@
 
 #include <winsock2.h>
 
-#define REDO_INTERVAL 3000
-
+//-----------------------------------------------------------------------------
+//----- Private attribute.
 static SOCKET m_SocketHandler;
 static char *m_Host = NULL;
 static int m_Port = 0;
@@ -26,7 +26,7 @@ static int m_ErrorCode = 0;
 
 // TODO: To act as construct.
 bool 
-libsockclient_init(char *host, int port) 
+libsockclient_init(char *Host, int Port) 
 {
 	WSADATA wsaData;
 	struct hostent *pServer;
@@ -53,7 +53,7 @@ libsockclient_init(char *host, int port)
 
 	// TODO: To retrieve host information corresponding to a host name from a 
     // host database.
-	pServer = gethostbyname(host);
+	pServer = gethostbyname(Host);
 	if (pServer == NULL) 
 	{
 		libsockclient_cleanup();
@@ -66,7 +66,7 @@ libsockclient_init(char *host, int port)
     // FLOWSPEC structure.
 	ZeroMemory((char *)&pServerAddr, sizeof(pServerAddr));
 	pServerAddr.sin_family = AF_INET;
-	pServerAddr.sin_port = htons(port);
+	pServerAddr.sin_port = htons(Port);
 	CopyMemory((char *)&pServerAddr.sin_addr.s_addr, (char *)pServer->h_addr, 
 		pServer->h_length);
 	if (SOCKET_ERROR == WSAConnect(m_SocketHandler, 
@@ -78,8 +78,8 @@ libsockclient_init(char *host, int port)
 		return false;
 	}
 
-	m_Host = host;
-	m_Port = port;
+	m_Host = Host;
+	m_Port = Port;
 	return true;
 }
 
@@ -96,7 +96,7 @@ libsockclient_cleanup()
 
 // TODO: To send buffer to the server if failed re-send as default.
 void 
-libsockclient_send(char *Buffer, bool resend) 
+libsockclient_send(char *Buffer, bool ReSend) 
 {
 	WSABUF DataBuf;
 	DWORD dwSendBytes = 0;
@@ -106,7 +106,8 @@ libsockclient_send(char *Buffer, bool resend)
 	DataBuf.buf = Buffer;
 	DataBuf.len = strlen(Buffer);
 	err = WSASend(m_SocketHandler, &DataBuf, 1, &dwSendBytes, dwFlags, NULL, NULL);
-	if (err == SOCKET_ERROR) 
+	// TODO: To re-send.
+    if (err == SOCKET_ERROR && ReSend) 
 	{
 		m_ErrorCode = WSAGetLastError();
 		Sleep(REDO_INTERVAL);
@@ -117,7 +118,7 @@ libsockclient_send(char *Buffer, bool resend)
 
 // TODO: To receive buffer from the server if failed re-receive as default.
 void 
-libsockclient_recv(char *Buffer, int BufferSize, bool rerecv) 
+libsockclient_recv(char *Buffer, int BufferSize, bool ReRecv) 
 {
 	WSABUF DataBuf;
 	DWORD dwRecvBytes;
@@ -127,7 +128,8 @@ libsockclient_recv(char *Buffer, int BufferSize, bool rerecv)
 	DataBuf.buf = Buffer;
 	DataBuf.len = BufferSize;
 	err = WSARecv(m_SocketHandler, &DataBuf, 1, &dwRecvBytes, &dwFlags, NULL, NULL);
-	if (err == SOCKET_ERROR) 
+	// TODO: To re-receive.
+    if (err == SOCKET_ERROR && ReRecv) 
 	{
 		m_ErrorCode = WSAGetLastError();
 		Sleep(REDO_INTERVAL);

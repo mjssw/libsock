@@ -15,10 +15,13 @@
 #ifndef __LIBSOCKCLIENT_H__
 #define __LIBSOCKCLIENT_H__
 
-bool libsockclient_init(char *host, int port);
+#define REDO_INTERVAL 3000  // for re-send, re-receive timer interval.
+
+bool libsockclient_init(char *Host, int Port);
 void libsockclient_cleanup();
-void libsockclient_send(char *Buffer, bool resend);
-void libsockclient_recv(char *Buffer, int BufferSize, bool rerecv);
+void libsockclient_send(char *Buffer, bool ReSend);
+void libsockclient_recv(char *Buffer, int BufferSize, bool ReRecv);
 int libsockclient_geterrorcode();
 
 #endif // __LIBSOCKCLIENT_H__
+
