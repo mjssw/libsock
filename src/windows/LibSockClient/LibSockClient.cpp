@@ -15,6 +15,7 @@
 #include "stdafx.h"
 #include "LibSockClient.h"
 
+#include <stdio.h>
 #include <winsock2.h>
 
 //-----------------------------------------------------------------------------
@@ -22,6 +23,7 @@
 static SOCKET m_SocketHandler;
 static char *m_Host = NULL;
 static int m_Port = 0;
+static char *m_SendBuffer = NULL;
 static int m_ErrorCode = 0;
 
 // TODO: To act as construct.
@@ -37,6 +39,9 @@ libsockclient_init(char *Host, int Port)
 	err = WSAStartup(MAKEWORD(2, 2), &wsaData);
 	if (err != 0) 
 	{
+#if DEBUG
+		printf("DEBUG at %d: WSAStartup error.\n", __LINE__);
+#endif
 		m_ErrorCode = WSAGetLastError();
 		return false;
 	}
@@ -47,6 +52,9 @@ libsockclient_init(char *Host, int Port)
         WSA_FLAG_OVERLAPPED);
 	if (m_SocketHandler == INVALID_SOCKET) 
 	{
+#if DEBUG
+		printf("DEBUG at %d: WSASocket error.\n", __LINE__);
+#endif
 		m_ErrorCode = WSAGetLastError();
 		return false;
 	}
@@ -56,8 +64,11 @@ libsockclient_init(char *Host, int Port)
 	pServer = gethostbyname(Host);
 	if (pServer == NULL) 
 	{
-		libsockclient_cleanup();
+#if DEBUG
+		printf("DEBUG at %d: gethostbyname error.\n", __LINE__);
+#endif
 		m_ErrorCode = WSAGetLastError();
+		libsockclient_cleanup();
 		return false;
 	}
 
@@ -73,6 +84,9 @@ libsockclient_init(char *Host, int Port)
 		reinterpret_cast<const struct sockaddr *>(&pServerAddr), sizeof(pServerAddr), 
 		NULL, NULL, NULL, NULL)) 
 	{
+#if DEBUG
+		printf("DEBUG at %d: WSAConnect error.\n", __LINE__);
+#endif
 		libsockclient_cleanup();
 		m_ErrorCode = WSAGetLastError();
 		return false;
@@ -103,12 +117,16 @@ libsockclient_send(char *Buffer, bool ReSend)
 	DWORD dwFlags = 0;
 	int err;
 
+	m_SendBuffer = Buffer;
 	DataBuf.buf = Buffer;
 	DataBuf.len = strlen(Buffer);
 	err = WSASend(m_SocketHandler, &DataBuf, 1, &dwSendBytes, dwFlags, NULL, NULL);
 	// TODO: To re-send.
     if (err == SOCKET_ERROR && ReSend) 
 	{
+#if DEBUG
+		printf("DEBUG at %d: WSASend error.\n", __LINE__);
+#endif
 		m_ErrorCode = WSAGetLastError();
 		Sleep(REDO_INTERVAL);
 		libsockclient_init(m_Host, m_Port);
@@ -131,9 +149,16 @@ libsockclient_recv(char *Buffer, int BufferSize, bool ReRecv)
 	// TODO: To re-receive.
     if (err == SOCKET_ERROR && ReRecv) 
 	{
+#if DEBUG
+		printf("DEBUG at %d: WSARecv error.\n", __LINE__);
+#endif
 		m_ErrorCode = WSAGetLastError();
 		Sleep(REDO_INTERVAL);
+#if DEBUG
+		printf("DEBUG at %d: Re-doing ...\n", __LINE__);
+#endif
 		libsockclient_init(m_Host, m_Port);
+		libsockclient_send(m_SendBuffer, true);
 		libsockclient_recv(Buffer, BufferSize, true);
 	}
 }

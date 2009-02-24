@@ -16,6 +16,7 @@
 #define __LIBSOCKCLIENT_H__
 
 #define REDO_INTERVAL 3000  // for re-send, re-receive timer interval.
+#define DEBUG 1
 
 bool libsockclient_init(char *Host, int Port);
 void libsockclient_cleanup();
