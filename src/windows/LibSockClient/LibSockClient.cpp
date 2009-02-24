@@ -94,7 +94,7 @@ libsockclient_cleanup()
 	WSACleanup();
 }
 
-// TODO: To send buffer to the server if failed re-send as default.
+// TODO: To send buffer to the server.
 void 
 libsockclient_send(char *Buffer, bool ReSend) 
 {
@@ -116,7 +116,7 @@ libsockclient_send(char *Buffer, bool ReSend)
 	}
 }
 
-// TODO: To receive buffer from the server if failed re-receive as default.
+// TODO: To receive buffer from the server.
 void 
 libsockclient_recv(char *Buffer, int BufferSize, bool ReRecv) 
 {
