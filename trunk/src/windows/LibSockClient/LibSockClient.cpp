@@ -115,7 +115,7 @@ libsockclient_send(char *Buffer, bool resend)
 	}
 }
 
-// TODO: To recive buffer from the server if failed re-recive as default.
+// TODO: To receive buffer from the server if failed re-receive as default.
 void 
 libsockclient_recv(char *Buffer, int BufferSize, bool rerecv) 
 {
