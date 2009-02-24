@@ -202,6 +202,7 @@ bool CreateConnectedSocket(SOCKET *pSocket, char *szHost, int nPortNo)
 		WriteToConsole("\nError occurred while connecting.");
 		return false; //error
 	}
+    printf("DEBUG at %d: server address %s\n", __LINE__, inet_ntoa(ServerAddress.sin_addr));
 
 	return true;
 }
