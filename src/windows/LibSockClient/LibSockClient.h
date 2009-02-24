@@ -18,7 +18,7 @@
 bool libsockclient_init(char *host, int port);
 void libsockclient_cleanup();
 void libsockclient_send(char *Buffer, bool resend);
-void libsockclient_recv(char *Buffer, bool rerecv);
+void libsockclient_recv(char *Buffer, int BufferSize, bool rerecv);
 int libsockclient_geterrorcode();
 
 #endif // __LIBSOCKCLIENT_H__

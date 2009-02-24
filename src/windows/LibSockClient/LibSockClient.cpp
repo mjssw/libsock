@@ -117,7 +117,7 @@ libsockclient_send(char *Buffer, bool resend)
 
 // TODO: To recive buffer from the server if failed re-recive as default.
 void 
-libsockclient_recv(char *Buffer, bool rerecv) 
+libsockclient_recv(char *Buffer, int BufferSize, bool rerecv) 
 {
 	WSABUF DataBuf;
 	DWORD dwRecvBytes;
@@ -125,14 +125,14 @@ libsockclient_recv(char *Buffer, bool rerecv)
 	int err;
 
 	DataBuf.buf = Buffer;
-	DataBuf.len = strlen(Buffer);
+	DataBuf.len = BufferSize;
 	err = WSARecv(m_SocketHandler, &DataBuf, 1, &dwRecvBytes, &dwFlags, NULL, NULL);
 	if (err == SOCKET_ERROR) 
 	{
 		m_ErrorCode = WSAGetLastError();
 		Sleep(REDO_INTERVAL);
 		libsockclient_init(m_Host, m_Port);
-		libsockclient_recv(Buffer, true);
+		libsockclient_recv(Buffer, BufferSize, true);
 	}
 }
 
