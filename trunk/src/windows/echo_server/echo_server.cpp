@@ -46,7 +46,7 @@ struct Attachment {
 		sString[dwStringSize] = 0;
 		return true;
 	};
-
+    
 	// as requested by the API of the framework
 	void Clear() { memset(this, 0, sizeof(Attachment) ); };
 
@@ -97,12 +97,13 @@ public:
 		int nRet;
 		DWORD dwSize;
 		char *temp;
-
+        
 		dwSize = BUFF_SIZE - 1;
 		temp = pSocket->GetAttachment()->sString;
 
 		// initiate the reading with OnAccept
         nRet = pSocket->ReadFromSocket( temp, dwSize );
+        printf("DEBUG at %d: OnAccept %s\n", __LINE__, temp);
         pSocket->GetAttachment()->ResetTime( false );
 
 		if ( nRet == SOCKET_ERROR ) {
@@ -149,12 +150,12 @@ public:
 	virtual void OnWriteFinalized( MyCSocket *pSocket, MYOVERLAPPED *pOverlap,
 		DWORD dwBytesTransferred, MySSocket *pServerSocket, MyIOCPSimple *pHIocp ) {
 		char *temp = pSocket->GetAttachment()->sString;
-
+        // FIXME: Multi-send issue.
 		// clean the attachment
 		pSocket->GetAttachment()->Clear();
 
 		// and once again
-		OnAccept(pSocket, NULL,pServerSocket, NULL);
+		OnAccept(pSocket, NULL, pServerSocket, NULL);
 	};
 };
 
