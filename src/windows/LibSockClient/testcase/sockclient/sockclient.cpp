@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
 	char pBuffer[BUFF_SIZE];
 	int i;
 
-	err = libsockclient_init("202.111.5.2", 8080);
+	err = libsockclient_init("192.168.3.83", 8080);
 	if (err) 
 	{
 		printf("Initial libsockclient success.\n");
