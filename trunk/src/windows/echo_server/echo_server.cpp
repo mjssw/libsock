@@ -21,6 +21,7 @@
 #include "INCLUDE/server_service.h"     // for server_service template
 #include "XGetopt.h"                    // for getopt
 
+#define DEBUG 1
 #define BUFF_SIZE 512
 #define MAX_CONNECTIONS 10              // for concurrent connection number, 
                                         // set very small for test purpose only 
@@ -32,13 +33,13 @@
 struct Attachment {
 	volatile time_t				tmLastActionTime;
 	char						sString[BUFF_SIZE];
-	DWORD						dwStringSize; // current string size
+	DWORD						dwStringSize;   // current string size
 
 	Attachment() { Clear(); };
 
 	bool Commit( DWORD dwBytesTransferred ) {
 		DWORD dwSize = dwStringSize + dwBytesTransferred;
-	
+
 		if ( dwBytesTransferred <= 0 ) return false;
 		if ( dwSize >= BUFF_SIZE ) return false;
 
@@ -81,9 +82,6 @@ typedef ServerService<Attachment> MyServerService;
 
 class MyISockEventHandler: public MyISockEvent {
 public:
-	MyISockEventHandler() {};
-	~MyISockEventHandler() {};
-
 	// empty method, not used
 	virtual void OnClose( MyCSocket *pSocket, MYOVERLAPPED *pOverlap, 
 		MySSocket *pServerSocket, MyIOCPSimple *pHIocp ) {};
@@ -99,11 +97,13 @@ public:
 		char *temp;
         
 		dwSize = BUFF_SIZE - 1;
-		temp = pSocket->GetAttachment()->sString;
+		temp = pSocket->GetAttachment()->sString; 
 
 		// initiate the reading with OnAccept
         nRet = pSocket->ReadFromSocket( temp, dwSize );
+#if DEBUG
         printf("DEBUG at %d: OnAccept %s\n", __LINE__, temp);
+#endif
         pSocket->GetAttachment()->ResetTime( false );
 
 		if ( nRet == SOCKET_ERROR ) {
@@ -114,7 +114,7 @@ public:
 	virtual void OnReadFinalized( MyCSocket *pSocket, MYOVERLAPPED *pOverlap,
 		DWORD dwBytesTransferred, MySSocket *pServerSocket, MyIOCPSimple *pHIocp ) {
 		int nRet;
-		DWORD dwSize, dwPos;
+		DWORD dwSize, dwPos, dwIndex;
 		char *temp, sender[BUFF_SIZE];
 
 		// finalize the filling of the buffer
@@ -123,14 +123,12 @@ public:
 		dwSize = BUFF_SIZE - 1;
 		dwPos = pSocket->GetAttachment()->dwStringSize;
 		temp = pSocket->GetAttachment()->sString;
-
-		//nRet = pSocket->ReadFromSocket(	temp + dwPos, dwSize - dwPos );
-		nRet = pSocket->ReadFromSocket(	temp, dwSize );
-        // TODO: To emulate for reading command(s) from the client(s)
-        printf("DEBUG at %d: read %s\n", __LINE__, temp);
-        // TODO: To handle the command(s)
-        // m_HandleCmd(...);
-
+		
+        nRet = pSocket->ReadFromSocket( temp + dwPos, dwSize - dwPos );
+#if DEBUG
+        printf("DEBUG at %d: OnReadFinalized %s - %d(%d)\n", __LINE__, temp, 
+            strlen(temp), dwBytesTransferred);
+#endif
         pSocket->GetAttachment()->ResetTime( false );
 
 		if ( nRet == SOCKET_ERROR ) {
@@ -140,8 +138,9 @@ public:
 		else if ( nRet != RECV_BUFFER_EMPTY ) {
             // TODO: To emulate for sending back
             memset(sender, 0, BUFF_SIZE);
-            sprintf(sender, "%s%s", "Server feedback: ", temp);
-			nRet = pSocket->WriteToSocket( sender, dwSize );
+            dwIndex = strlen(temp) - dwBytesTransferred;
+			sprintf(sender, "server response: %s", temp + dwIndex);
+            nRet = pSocket->WriteToSocket( sender, dwSize );
 			if ( nRet == SOCKET_ERROR ) {
 				pServerSocket->Release( pSocket );
 			}
