@@ -20,13 +20,27 @@
 
 #define BUFF_SIZE 1024	// for 1KB for test purpose only.
 
+static char *m_msg[] = 
+{
+	"sirtoozee",
+	"open source",
+	"Linux",
+	"Unix",
+	"PSP",
+	"iphone",
+	"XBOX",
+	"SDK",
+	"C/C++",
+	"Java"
+};
+
 int main(int argc, char* argv[])
 {
 	bool err;
 	char pBuffer[BUFF_SIZE];
 	int i;
 
-	err = libsockclient_init(argv[1] ? argv[1] : "192.168.0.104", 8080);
+	err = libsockclient_init(argv[1] ? argv[1] : "192.168.3.83", 8080);
 	if (err) 
 	{
 		printf("Initial libsockclient success.\n");
@@ -40,8 +54,8 @@ int main(int argc, char* argv[])
 
 	for (i = 0; i < 10; i++) 
 	{
-		printf("sending ...\n");
-		libsockclient_send("sirtoozee", true);
+		printf("sending %s...\n", m_msg[i]);
+		libsockclient_send(m_msg[i], true);
 		printf("receiving ...\n");
 		memset(pBuffer, 0, BUFF_SIZE);
 		libsockclient_recv(pBuffer, BUFF_SIZE, true);
