@@ -17,6 +17,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <windows.h>
 
 #define BUFF_SIZE 1024	// for 1KB for test purpose only.
 
@@ -38,7 +39,8 @@ int main(int argc, char* argv[])
 {
 	bool err;
 	char pBuffer[BUFF_SIZE];
-	int i;
+	int i = 0;
+	bool loop = true;
 
 	err = libsockclient_init(argv[1] ? argv[1] : "192.168.3.83", 8080);
 	if (err) 
@@ -52,8 +54,17 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 
+	while (loop) 
+	{
+		if (i == 13) loop = false;
+		Sleep(1000);
+		printf("tick %d...\t", i);
+		i++;
+	}
+
 	for (i = 0; i < 10; i++) 
 	{
+		Sleep(6000);
 		printf("sending %s...\n", m_msg[i]);
 		libsockclient_send(m_msg[i], true);
 		printf("receiving ...\n");
