@@ -13,6 +13,9 @@
 //-----------------------------------------------------------------------------
 
 #include "sync.h"
+#include "threadpool.h"
+
+#include <stdio.h>
 
 int main() 
 {
@@ -20,6 +23,7 @@ int main()
 
     pMutex.Lock();
     pMutex.Unlock();
+    printf("%d\n", CCTEC::GetProcessorNum());
     return 0;
 }
 
