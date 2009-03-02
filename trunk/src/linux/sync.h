@@ -22,17 +22,19 @@ namespace CCTEC
     // TODO: Mutex object
     class Mutex 
     {
+    private:
+        // TODO: Mutex handler.
+        pthread_mutex_t m_MutexHandler;
+
     public:
-        // TODO: Default construct function.
-        Mutex() { m_MutexHandler = PTHREAD_MUTEX_INITIALIZER; };
+        // TODO: Construct.
+        Mutex() { pthread_mutex_init(&m_MutexHandler, NULL); };
+        // TODO: Destruct.
+        ~Mutex() { pthread_mutex_destroy(&m_MutexHandler); };
         // TODO: To lock the mutex resource.
         void Lock() { pthread_mutex_lock(&m_MutexHandler); };
         // TODO: To unlock the mutex resource.
         void Unlock() { pthread_mutex_unlock(&m_MutexHandler); };
-
-    private:
-        // TODO: Mutex handler.
-        pthread_mutex_t m_MutexHandler;
     };
 };
 
