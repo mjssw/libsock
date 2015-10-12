@@ -1,0 +1,1 @@
+Socket applicating library for Linux/Windows based on epoll/IOCP.
